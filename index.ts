@@ -112,6 +112,7 @@ export class Random {
     const lightness = this.getRandomInt(30, 70);
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
+  
   public generateRandomPassword(length: number, options: IPasswordOptions) {
     let allChars = LOWER_CASE_CHARS;
     if (options.includeUppercase) allChars += UPPER_CASE_CHARS;
@@ -125,5 +126,11 @@ export class Random {
     }
 
     return password;
+  }
+
+  public generateRandomEmoticon() {
+    return String.fromCodePoint(
+      Math.floor(Math.random() * (0x1f600 - 0x1f64f + 1)) + 0x1f600
+    );
   }
 }
