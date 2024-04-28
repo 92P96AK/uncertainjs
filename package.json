@@ -1,0 +1,25 @@
+{
+  "name": "uncertainjs",
+  "version": "0.0.1",
+  "description": "generate and get random datas",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/92P96AK/uncertainjs.git"
+  },
+  "keywords": [],
+  "author": "pradip kharal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/92P96AK/uncertainjs/issues"
+  },
+  "homepage": "https://github.com/92P96AK/uncertainjs#readme",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
