@@ -1,3 +1,11 @@
+import {
+  LOWER_CASE_CHARS,
+  NUMERIC_CHARS,
+  SPECIAL_CHARS,
+  UPPER_CASE_CHARS,
+} from "./constants";
+import { IPasswordOptions } from "./interface";
+
 export class Random {
   constructor() {}
 
@@ -103,5 +111,19 @@ export class Random {
     const saturation = this.getRandomInt(30, 90);
     const lightness = this.getRandomInt(30, 70);
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
+  public generateRandomPassword(length: number, options: IPasswordOptions) {
+    let allChars = LOWER_CASE_CHARS;
+    if (options.includeUppercase) allChars += UPPER_CASE_CHARS;
+    if (options.includeNumbers) allChars += NUMERIC_CHARS;
+    if (options.includeSpecialChars) allChars += SPECIAL_CHARS;
+
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * allChars.length);
+      password += allChars[randomIndex];
+    }
+
+    return password;
   }
 }
