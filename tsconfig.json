@@ -8,14 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": [
-      "./interface",
-    ],
+    "declaration":true
   },
-  "include": [
-    "index.ts",
-    "types"
-  ],
   "exclude": [
     "**/node_modules",
     "node_modules",

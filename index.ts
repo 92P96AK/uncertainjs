@@ -1,6 +1,4 @@
-import { RandomGeneratedType } from "./types";
-
-export class Random implements RandomGeneratedType {
+export class Random {
   constructor() {}
 
   public getRandomElement<T>(obj: { [key: string]: T[] }): {
@@ -10,7 +8,9 @@ export class Random implements RandomGeneratedType {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         const array = obj[key];
-        result[key] = array[Math.floor(Math.random() * array.length)];
+        if (array) {
+          result[key] = array[Math.floor(Math.random() * array.length)] as T;
+        }
       }
     }
     return result;
@@ -47,9 +47,10 @@ export class Random implements RandomGeneratedType {
   }
 
   public generateRandomGraph(numVertices: number = 5, density: number = 0.5) {
-    const graph = Array.from({ length: numVertices }, () =>
+    const graph: number[][] = Array.from({ length: numVertices }, () =>
       Array(numVertices).fill(0)
     );
+
     for (let i = 0; i < numVertices; i++) {
       for (let j = i + 1; j < numVertices; j++) {
         const randomValue = Math.random();
