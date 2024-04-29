@@ -18,3 +18,8 @@ export interface IRandomNoise {
   fileName: string;
   type: AUDIO_FILE_TYPE;
 }
+
+export interface IRandomImageOptions {
+  height?: number;
+  width?: number;
+}
