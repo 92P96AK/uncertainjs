@@ -11,6 +11,7 @@ import {
   IRandomImageOptions,
   IRandomNoise,
   IRandomNoiseOptions,
+  ObjectSchema,
 } from "./interface";
 import path from "path";
 
@@ -24,6 +25,19 @@ export class Random {
     prop.fileName = props?.fileName ?? "random_noise";
     prop.type = props?.type ?? "wav";
     return prop;
+  }
+
+  private getRandomvalue(type: string): string | number | boolean {
+    switch (type) {
+      case "string":
+        return this.generateRandomString();
+      case "number":
+        return this.generateRandomNumber();
+      case "boolean":
+        return this.generateRandomBoolean();
+      default:
+        return "";
+    }
   }
 
   public getRandomElement<T>(obj: { [key: string]: T[] }): {
@@ -67,7 +81,7 @@ export class Random {
     }
   }
 
-  public getRandomBoolean(): boolean {
+  public generateRandomBoolean(): boolean {
     return Math.random() < 0.5;
   }
 
@@ -202,5 +216,39 @@ export class Random {
     } catch (error) {
       throw new Error(`error`);
     }
+  }
+  public generateRandomString(length: number = 10): string {
+    const characters = LOWER_CASE_CHARS + UPPER_CASE_CHARS + NUMERIC_CHARS;
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  }
+  public generateRandomNumber(
+    min: number = 0,
+    max: number = 100000000
+  ): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  public generateRandomObject(schema: ObjectSchema): Record<string, any> {
+    const result: Record<string, any> = {};
+    for (const key in schema) {
+      if (schema.hasOwnProperty(key)) {
+        const typeOrArray = schema[key];
+        if (Array.isArray(typeOrArray)) {
+          result[key] =
+            typeOrArray[Math.floor(Math.random() * typeOrArray.length)];
+        } else if (typeof typeOrArray === "object") {
+          result[key] = this.generateRandomObject(typeOrArray);
+        } else {
+          result[key] = this.getRandomvalue(typeOrArray as string);
+        }
+      }
+    }
+    return result;
   }
 }
