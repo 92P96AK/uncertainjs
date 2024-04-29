@@ -4,9 +4,11 @@ import {
   NUMERIC_CHARS,
   SPECIAL_CHARS,
   UPPER_CASE_CHARS,
+  randomImageUrls,
 } from "./constants";
 import {
   IPasswordOptions,
+  IRandomImageOptions,
   IRandomNoise,
   IRandomNoiseOptions,
 } from "./interface";
@@ -161,7 +163,7 @@ export class Random {
       }
       const header = Buffer.alloc(44);
       const data = Buffer.alloc(samples.length * 2);
-      
+
       header.write("RIFF", 0);
       header.writeUInt32LE(36 + data.length, 4);
       header.write("WAVE", 8);
@@ -182,6 +184,21 @@ export class Random {
       const wavBuffer = Buffer.concat([header, data]);
       fs.writeFileSync(filePath, wavBuffer);
       return filePath;
+    } catch (error) {
+      throw new Error(`error`);
+    }
+  }
+
+  public generateRandomImageUrl(props?: IRandomImageOptions) {
+    try {
+      const height = props?.height ?? 600;
+      const width = props?.width ?? 800;
+      const { randomImageUrls: baseUrl } = this.getRandomElement({
+        randomImageUrls,
+      });
+      return `${baseUrl}/${width}/${height}?random=${Math.floor(
+        Math.random() * 10000000
+      )}`;
     } catch (error) {
       throw new Error(`error`);
     }
