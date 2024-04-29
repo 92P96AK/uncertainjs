@@ -23,3 +23,7 @@ export interface IRandomImageOptions {
   height?: number;
   width?: number;
 }
+
+export interface ObjectSchema {
+  [key: string]: string | number | boolean | ObjectSchema | (string | number | boolean)[];
+}
