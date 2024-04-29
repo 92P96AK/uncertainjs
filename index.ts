@@ -1,13 +1,28 @@
+import fs from "fs";
 import {
   LOWER_CASE_CHARS,
   NUMERIC_CHARS,
   SPECIAL_CHARS,
   UPPER_CASE_CHARS,
 } from "./constants";
-import { IPasswordOptions } from "./interface";
+import {
+  IPasswordOptions,
+  IRandomNoise,
+  IRandomNoiseOptions,
+} from "./interface";
+import path from "path";
 
 export class Random {
   constructor() {}
+
+  private parseAudioProps(props?: IRandomNoiseOptions) {
+    const prop = {} as IRandomNoise;
+    prop.duration = props?.duration ?? 5;
+    prop.sampleRate = props?.sampleRate ?? 44100;
+    prop.fileName = props?.fileName ?? "random_noise";
+    prop.type = props?.type ?? "wav";
+    return prop;
+  }
 
   public getRandomElement<T>(obj: { [key: string]: T[] }): {
     [key: string]: T;
@@ -112,7 +127,7 @@ export class Random {
     const lightness = this.getRandomInt(30, 70);
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
-  
+
   public generateRandomPassword(length: number, options: IPasswordOptions) {
     let allChars = LOWER_CASE_CHARS;
     if (options.includeUppercase) allChars += UPPER_CASE_CHARS;
@@ -132,5 +147,43 @@ export class Random {
     return String.fromCodePoint(
       Math.floor(Math.random() * (0x1f600 - 0x1f64f + 1)) + 0x1f600
     );
+  }
+
+  public generateRandomNoise(props?: IRandomNoiseOptions) {
+    try {
+      const { duration, sampleRate, fileName, type } =
+        this.parseAudioProps(props);
+      const filePath = path.join(process.cwd(), fileName + "." + type);
+      const numSamples = duration * sampleRate;
+      const samples = new Float32Array(numSamples);
+      for (let i = 0; i < numSamples; i++) {
+        samples[i] = Math.random() * 2 - 1;
+      }
+      const header = Buffer.alloc(44);
+      const data = Buffer.alloc(samples.length * 2);
+      
+      header.write("RIFF", 0);
+      header.writeUInt32LE(36 + data.length, 4);
+      header.write("WAVE", 8);
+      header.write("fmt ", 12);
+      header.writeUInt32LE(16, 16);
+      header.writeUInt16LE(1, 20);
+      header.writeUInt16LE(1, 22);
+      header.writeUInt32LE(sampleRate, 24);
+      header.writeUInt32LE(sampleRate * 2, 28);
+      header.writeUInt16LE(2, 32);
+      header.writeUInt16LE(16, 34);
+      header.write("data", 36);
+      header.writeUInt32LE(data.length, 40);
+      for (let i = 0; i < samples.length; i++) {
+        const value = Math.max(-1, Math.min(1, samples[i]));
+        data.writeInt16LE(Math.floor(value * 32767), i * 2);
+      }
+      const wavBuffer = Buffer.concat([header, data]);
+      fs.writeFileSync(filePath, wavBuffer);
+      return filePath;
+    } catch (error) {
+      throw new Error(`error`);
+    }
   }
 }
