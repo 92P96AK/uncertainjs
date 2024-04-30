@@ -24,6 +24,40 @@ export interface IRandomImageOptions {
   width?: number;
 }
 
+export interface ILatLong {
+  latitude: number;
+  longitude: number;
+}
+
 export interface ObjectSchema {
-  [key: string]: string | number | boolean | ObjectSchema | (string | number | boolean)[];
+  [key: string]:
+    | SchemaType.Name
+    | SchemaType.Age
+    | SchemaType.Gender
+    | SchemaType.Email
+    | SchemaType.UUID
+    | SchemaType.Number
+    | SchemaType.String
+    | SchemaType.Boolean
+    | ObjectSchema
+    | (
+        | SchemaType.Name
+        | SchemaType.Age
+        | SchemaType.Gender
+        | SchemaType.Email
+        | SchemaType.UUID
+        | SchemaType.Number
+        | SchemaType.String
+        | SchemaType.Boolean
+      )[];
+}
+export namespace SchemaType {
+  export type Name = "name";
+  export type Age = "age";
+  export type Gender = "gender";
+  export type Email = "email";
+  export type UUID = "uuid";
+  export type Number = number;
+  export type String = string;
+  export type Boolean = boolean;
 }
