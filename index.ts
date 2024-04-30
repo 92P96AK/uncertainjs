@@ -7,6 +7,7 @@ import {
   randomImageUrls,
 } from "./constants";
 import {
+  ILatLong,
   IPasswordOptions,
   IRandomImageOptions,
   IRandomNoise,
@@ -18,7 +19,7 @@ import path from "path";
 export class Random {
   constructor() {}
 
-  private parseAudioProps(props?: IRandomNoiseOptions) {
+  private parseAudioProps(props?: IRandomNoiseOptions): IRandomNoise {
     const prop = {} as IRandomNoise;
     prop.duration = props?.duration ?? 5;
     prop.sampleRate = props?.sampleRate ?? 44100;
@@ -85,7 +86,10 @@ export class Random {
     return Math.random() < 0.5;
   }
 
-  public generateRandomGraph(numVertices: number = 5, density: number = 0.5) {
+  public generateRandomGraph(
+    numVertices: number = 5,
+    density: number = 0.5
+  ): number[][] {
     const graph: number[][] = Array.from({ length: numVertices }, () =>
       Array(numVertices).fill(0)
     );
@@ -108,7 +112,7 @@ export class Random {
     maxLat = 90,
     minLng = -180,
     maxLng = 180
-  ) {
+  ): ILatLong {
     const randomLat = Math.random() * (maxLat - minLat) + minLat;
     const randomLng = Math.random() * (maxLng - minLng) + minLng;
     return { latitude: randomLat, longitude: randomLng };
@@ -144,7 +148,10 @@ export class Random {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 
-  public generateRandomPassword(length: number, options: IPasswordOptions) {
+  public generateRandomPassword(
+    length: number,
+    options: IPasswordOptions
+  ): string {
     let allChars = LOWER_CASE_CHARS;
     if (options.includeUppercase) allChars += UPPER_CASE_CHARS;
     if (options.includeNumbers) allChars += NUMERIC_CHARS;
@@ -159,13 +166,13 @@ export class Random {
     return password;
   }
 
-  public generateRandomEmoticon() {
+  public generateRandomEmoticon(): string {
     return String.fromCodePoint(
       Math.floor(Math.random() * (0x1f600 - 0x1f64f + 1)) + 0x1f600
     );
   }
 
-  public generateRandomNoise(props?: IRandomNoiseOptions) {
+  public generateRandomNoise(props?: IRandomNoiseOptions): string {
     try {
       const { duration, sampleRate, fileName, type } =
         this.parseAudioProps(props);
@@ -203,7 +210,7 @@ export class Random {
     }
   }
 
-  public generateRandomImageUrl(props?: IRandomImageOptions) {
+  public generateRandomImageUrl(props?: IRandomImageOptions): string {
     try {
       const height = props?.height ?? 600;
       const width = props?.width ?? 800;
