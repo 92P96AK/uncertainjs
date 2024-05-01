@@ -4,9 +4,12 @@ import {
   NUMERIC_CHARS,
   SPECIAL_CHARS,
   UPPER_CASE_CHARS,
+  VOWELS,
   randomImageUrls,
 } from "./constants";
 import {
+  IFParsePayload,
+  IFPayload,
   ILatLong,
   IPasswordOptions,
   IRandomImageOptions,
@@ -40,7 +43,13 @@ export class Random {
         return "";
     }
   }
-
+  private parsePayload(payload?: IFPayload): IFParsePayload {
+    const resp = {} as IFParsePayload;
+    resp.min = payload?.min ?? 0;
+    resp.max = payload?.max ?? 1000;
+    resp.length = payload?.length ?? this.getRandomInt(resp.min, resp.max);
+    return resp;
+  }
   public getRandomElement<T>(obj: { [key: string]: T[] }): {
     [key: string]: T;
   } {
@@ -257,5 +266,18 @@ export class Random {
       }
     }
     return result;
+  }
+
+  public generateRandomName(payload?: IFPayload) {
+    const { length } = this.parsePayload(payload);
+    let name = "";
+    for (let i = 0; i < length; i++) {
+      if (i % 2 === 0) {
+        name += this.getRandomCharacter(LOWER_CASE_CHARS);
+      } else {
+        name += this.getRandomCharacter(VOWELS);
+      }
+    }
+    return name;
   }
 }
