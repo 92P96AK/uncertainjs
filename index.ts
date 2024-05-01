@@ -1,11 +1,14 @@
 import fs from "fs";
 import {
+  ADJECTIVES,
   CHARACTERS,
   CONSONANTS,
   LOWER_CASE_CHARS,
+  NOUNS,
   NUMERIC_CHARS,
   SPECIAL_CHARS,
   UPPER_CASE_CHARS,
+  VERBS,
   VOWELS,
   randomImageUrls,
 } from "./constants";
@@ -307,5 +310,26 @@ export class Random {
 
   public generateRandomUserName(payload?: IFPayload) {
     return this.getRandomCharacter(CHARACTERS);
+  }
+
+  public generateRandomLongDescription(payload?: IFPayload) {
+    const { length } = this.parsePayload(payload);
+    let description = "";
+    for (let i = 0; i < length; i++) {
+      const {
+        ADJECTIVES: randomAdjective,
+        NOUNS: randomNoun,
+        VERBS: randomVerb,
+      } = this.getRandomElement({ ADJECTIVES, NOUNS, VERBS });
+
+      const tempdescription =
+        description +
+        `${randomAdjective} ${randomNoun} that ${randomVerb} your ${randomNoun} and ${randomVerb} your ${randomAdjective} ${randomNoun}.`;
+      if (tempdescription.length > length) {
+        break;
+      }
+      description += tempdescription;
+    }
+    return description.trim();
   }
 }
