@@ -295,4 +295,12 @@ export class Random {
 
     return sername;
   }
+
+  public generateRandomFullName(payload?: IFPayload) {
+    return `${new String(
+      this.generateRandomName(payload) +
+        " " +
+        this.generateRandomSerName(payload)
+    )}`;
+  }
 }
