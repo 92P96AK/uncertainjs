@@ -342,4 +342,8 @@ export class Random {
     }
     return description.trim();
   }
+
+  public generateRandomAge(payload?: IFPayload) {
+    return this.getRandomInt(payload?.min ?? 18, payload?.max ?? 99);
+  }
 }
