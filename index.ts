@@ -1,5 +1,6 @@
 import fs from "fs";
 import {
+  CONSONANTS,
   LOWER_CASE_CHARS,
   NUMERIC_CHARS,
   SPECIAL_CHARS,
@@ -273,11 +274,25 @@ export class Random {
     let name = "";
     for (let i = 0; i < length; i++) {
       if (i % 2 === 0) {
-        name += this.getRandomCharacter(LOWER_CASE_CHARS);
+        name += this.getRandomCharacter(CONSONANTS);
       } else {
         name += this.getRandomCharacter(VOWELS);
       }
     }
     return name;
+  }
+
+  public generateRandomSerName(payload?: IFPayload) {
+    const { length } = this.parsePayload(payload);
+    let sername = "";
+    for (let i = 0; i < length; i++) {
+      if (i % 3 === 0 || i === 0) {
+        sername += this.getRandomCharacter(CONSONANTS);
+      } else {
+        sername += this.getRandomCharacter(VOWELS);
+      }
+    }
+
+    return sername;
   }
 }
