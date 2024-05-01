@@ -1,5 +1,6 @@
 import fs from "fs";
 import {
+  CHARACTERS,
   CONSONANTS,
   LOWER_CASE_CHARS,
   NUMERIC_CHARS,
@@ -302,5 +303,9 @@ export class Random {
         " " +
         this.generateRandomSerName(payload)
     )}`;
+  }
+
+  public generateRandomUserName(payload?: IFPayload) {
+    return this.getRandomCharacter(CHARACTERS);
   }
 }
