@@ -312,6 +312,16 @@ export class Random {
     return this.getRandomCharacter(CHARACTERS);
   }
 
+  public generateRandomShortDescrption(payload?: IFPayload) {
+    const {
+      ADJECTIVES: randomAdjective,
+      NOUNS: randomNoun,
+      VERBS: randomVerb,
+    } = this.getRandomElement({ ADJECTIVES, NOUNS, VERBS });
+
+    return `${randomAdjective} ${randomNoun} that ${randomVerb} your life.`;
+  }
+
   public generateRandomLongDescription(payload?: IFPayload) {
     const { length } = this.parsePayload(payload);
     let description = "";
