@@ -2,6 +2,7 @@ export interface IPasswordOptions {
   includeUppercase?: boolean;
   includeNumbers?: boolean;
   includeSpecialChars?: boolean;
+  length?: number;
 }
 
 type AUDIO_FILE_TYPE = "wav";
@@ -63,13 +64,21 @@ export namespace SchemaType {
 }
 
 export interface IFPayload {
-  min?: number
-  max?: number
-  length?: number
+  min?: number;
+  max?: number;
+  length?: number;
 }
 
 export interface IFParsePayload {
-  min: number
-  max: number
-  length: number
+  min: number;
+  max: number;
+  length: number;
+}
+
+export interface IGenEmailPayload {
+  startWith?: string;
+  includeNumber?: boolean;
+  length?: number;
+  hostDomains?: Array<string>;
+  excludeEmails?: Array<string>;
 }
