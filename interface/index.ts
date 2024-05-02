@@ -30,25 +30,24 @@ export interface ILatLong {
   longitude: number;
 }
 
-export interface ObjectSchema {
-  [key: string]:
-    | "string"
-    | "number"
-    | "boolean"
-    | ObjectSchema
-    | ObjectSchema[];
+export interface Schema {
+  [key: string]: ObjectT | Schema | Schema[];
 }
 
-export namespace SchemaType {
-  export type Name = "name";
-  export type Age = "age";
-  export type Gender = "gender";
-  export type Email = "email";
-  export type UUID = "uuid";
-  export type Number = number;
-  export type String = string;
-  export type Boolean = boolean;
-}
+export type ObjectT =
+  | "name"
+  | "age"
+  | "gender"
+  | "email"
+  | "uuid"
+  | "shortDescription"
+  | "longDescription"
+  | "name"
+  | "boolean"
+  | "string"
+  | "age"
+  | "postalCode"
+  | "number";
 
 export interface IFPayload {
   min?: number;

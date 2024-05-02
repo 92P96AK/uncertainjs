@@ -24,10 +24,10 @@ import {
   IRandomNoise,
   IRandomNoiseOptions,
   IRandomUsername,
-  ObjectSchema,
+  Schema,
 } from "./interface";
 import path from "path";
-
+export { Schema } from "./interface";
 export class Random {
   constructor() {}
 
@@ -276,7 +276,7 @@ export class Random {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  public generateRandomObject(schema: ObjectSchema): Record<string, any> {
+  public generateRandomObject(schema: Schema): Record<string, any> {
     const result: Record<string, any> = {};
     for (const key in schema) {
       if (schema.hasOwnProperty(key)) {
@@ -417,5 +417,4 @@ export class Random {
       throw new Error(`${error}`);
     }
   }
- 
 }
