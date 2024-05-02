@@ -16,12 +16,14 @@ import {
 import {
   IFParsePayload,
   IFPayload,
+  IFullNamePayload,
   IGenEmailPayload,
   ILatLong,
   IPasswordOptions,
   IRandomImageOptions,
   IRandomNoise,
   IRandomNoiseOptions,
+  IRandomUsername,
   ObjectSchema,
 } from "./interface";
 import path from "path";
@@ -289,8 +291,7 @@ export class Random {
     return result;
   }
 
-  public generateRandomName(payload?: IFPayload) {
-    const { length } = this.parsePayload(payload);
+  public generateRandomName(length = 7) {
     let name = "";
     for (let i = 0; i < length; i++) {
       if (i % 2 === 0) {
@@ -302,8 +303,7 @@ export class Random {
     return name;
   }
 
-  public generateRandomSerName(payload?: IFPayload) {
-    const { length } = this.parsePayload(payload);
+  public generateRandomSerName(length = 7) {
     let sername = "";
     for (let i = 0; i < length; i++) {
       if (i % 3 === 0 || i === 0) {
@@ -316,16 +316,27 @@ export class Random {
     return sername;
   }
 
-  public generateRandomFullName(payload?: IFPayload) {
+  public generateRandomFullName(payload: IFullNamePayload = {}) {
+    const { firstnameLength = 5, lastNameLength = 5 } = payload;
     return `${new String(
-      this.generateRandomName(payload) +
+      this.generateRandomName(firstnameLength) +
         " " +
-        this.generateRandomSerName(payload)
+        this.generateRandomSerName(lastNameLength)
     )}`;
   }
 
-  public generateRandomUserName(payload?: IFPayload) {
-    return this.getRandomCharacter(CHARACTERS);
+  public generateRandomUserName(payload: IRandomUsername = {}) {
+    const { includeNumbers = true, length = 7 } = payload;
+    let username = this.generateRandomString(length, false, false);
+
+    if (includeNumbers) {
+      const randomNumber = this.getRandomInt(100, 9999999999);
+      username = username
+        .substring(0, length - 3)
+        .concat(`${randomNumber}`)
+        .substring(0, length);
+    }
+    return username;
   }
 
   public generateRandomShortDescrption(payload?: IFPayload) {
@@ -367,7 +378,7 @@ export class Random {
     try {
       const {
         startWith = "",
-        includeNumber = true,
+        includeNumbers = true,
         length = 7,
         hostDomains = DISPOSABLE_EMAIL_PROVIDER,
         excludeEmails = [],
@@ -379,7 +390,7 @@ export class Random {
       let email = startWith;
       const usernameLength = Math.max(length - startWith.length, 6);
       email += this.generateRandomString(usernameLength, false, false);
-      if (includeNumber) {
+      if (includeNumbers) {
         const randomNumber = this.getRandomInt(100, 9999999999);
         email = email
           .substring(0, usernameLength - 3)
@@ -392,7 +403,7 @@ export class Random {
       if (excludeEmails.includes(email)) {
         return this.generateRandomEmail({
           startWith,
-          includeNumber,
+          includeNumbers,
           length,
           hostDomains,
           excludeEmails,
