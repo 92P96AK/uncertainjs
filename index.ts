@@ -3,6 +3,7 @@ import {
   ADJECTIVES,
   CHARACTERS,
   CONSONANTS,
+  DISPOSABLE_EMAIL_PROVIDER,
   LOWER_CASE_CHARS,
   NOUNS,
   NUMERIC_CHARS,
@@ -15,6 +16,7 @@ import {
 import {
   IFParsePayload,
   IFPayload,
+  IGenEmailPayload,
   ILatLong,
   IPasswordOptions,
   IRandomImageOptions,
@@ -162,14 +164,18 @@ export class Random {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 
-  public generateRandomPassword(
-    length: number,
-    options: IPasswordOptions
-  ): string {
+  public generateRandomPassword(options: IPasswordOptions = {}): string {
+    const {
+      includeUppercase = true,
+      includeNumbers = true,
+      includeSpecialChars = true,
+      length = 7,
+    } = options;
+
     let allChars = LOWER_CASE_CHARS;
-    if (options.includeUppercase) allChars += UPPER_CASE_CHARS;
-    if (options.includeNumbers) allChars += NUMERIC_CHARS;
-    if (options.includeSpecialChars) allChars += SPECIAL_CHARS;
+    if (includeUppercase) allChars += UPPER_CASE_CHARS;
+    if (includeNumbers) allChars += NUMERIC_CHARS;
+    if (includeSpecialChars) allChars += SPECIAL_CHARS;
 
     let password = "";
     for (let i = 0; i < length; i++) {
@@ -238,8 +244,18 @@ export class Random {
       throw new Error(`error`);
     }
   }
-  public generateRandomString(length: number = 10): string {
-    const characters = LOWER_CASE_CHARS + UPPER_CASE_CHARS + NUMERIC_CHARS;
+  public generateRandomString(
+    length: number = 10,
+    upperCase = true,
+    numeric = true
+  ): string {
+    let characters = LOWER_CASE_CHARS;
+    if (upperCase) {
+      characters += UPPER_CASE_CHARS;
+    }
+    if (numeric) {
+      characters += NUMERIC_CHARS;
+    }
     let result = "";
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
@@ -345,5 +361,46 @@ export class Random {
 
   public generateRandomAge(payload?: IFPayload) {
     return this.getRandomInt(payload?.min ?? 18, payload?.max ?? 99);
+  }
+
+  public generateRandomEmail(payload: IGenEmailPayload = {}): string {
+    try {
+      const {
+        startWith = "",
+        includeNumber = true,
+        length = 7,
+        hostDomains = DISPOSABLE_EMAIL_PROVIDER,
+        excludeEmails = [],
+      } = payload;
+      let { hostDomains: domain } = this.getRandomElement({
+        hostDomains,
+      });
+      domain = domain.split("@").reverse()[0];
+      let email = startWith;
+      const usernameLength = Math.max(length - startWith.length, 6);
+      email += this.generateRandomString(usernameLength, false, false);
+      if (includeNumber) {
+        const randomNumber = this.getRandomInt(100, 9999999999);
+        email = email
+          .substring(0, usernameLength - 3)
+          .concat(`${randomNumber}`)
+          .substring(0, usernameLength);
+      } else {
+        email = email.substring(0, usernameLength);
+      }
+      email = `${email}@${domain}`;
+      if (excludeEmails.includes(email)) {
+        return this.generateRandomEmail({
+          startWith,
+          includeNumber,
+          length,
+          hostDomains,
+          excludeEmails,
+        });
+      }
+      return email;
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
   }
 }
