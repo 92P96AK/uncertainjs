@@ -77,8 +77,17 @@ export interface IFParsePayload {
 
 export interface IGenEmailPayload {
   startWith?: string;
-  includeNumber?: boolean;
+  includeNumbers?: boolean;
   length?: number;
   hostDomains?: Array<string>;
   excludeEmails?: Array<string>;
+}
+
+export interface IFullNamePayload {
+  firstnameLength?: number;
+  lastNameLength?: number;
+}
+export interface IRandomUsername {
+  includeNumbers?: boolean;
+  length?: number;
 }
