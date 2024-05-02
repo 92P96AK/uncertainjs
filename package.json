@@ -1,7 +1,7 @@
 {
   "name": "uncertainjs",
   "version": "0.0.4",
-  "description": "uncertainjs is a Node.js package designed to get and generate random element of array, integer, string, floating number, character, date, boolean value, graph, geo co-ordinates, normal, rgb color, hex color, hls color, random object,generate random number,generate random string,generate random image url(uses https://picsum.photos),generate random noise,generate random emoticon,generate random password etc.",
+  "description": "generate and get random values",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.mjs",
