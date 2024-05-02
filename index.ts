@@ -52,6 +52,7 @@ export class Random {
         return "";
     }
   }
+
   private parsePayload(payload?: IFPayload): IFParsePayload {
     const resp = {} as IFParsePayload;
     resp.min = payload?.min ?? 0;
@@ -59,6 +60,7 @@ export class Random {
     resp.length = payload?.length ?? this.getRandomInt(resp.min, resp.max);
     return resp;
   }
+
   public getRandomElement<T>(obj: { [key: string]: T[] }): {
     [key: string]: T;
   } {
@@ -246,6 +248,7 @@ export class Random {
       throw new Error(`error`);
     }
   }
+
   public generateRandomString(
     length: number = 10,
     upperCase = true,
@@ -414,4 +417,5 @@ export class Random {
       throw new Error(`${error}`);
     }
   }
+ 
 }

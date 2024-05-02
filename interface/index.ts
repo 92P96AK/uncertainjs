@@ -32,26 +32,13 @@ export interface ILatLong {
 
 export interface ObjectSchema {
   [key: string]:
-    | SchemaType.Name
-    | SchemaType.Age
-    | SchemaType.Gender
-    | SchemaType.Email
-    | SchemaType.UUID
-    | SchemaType.Number
-    | SchemaType.String
-    | SchemaType.Boolean
+    | "string"
+    | "number"
+    | "boolean"
     | ObjectSchema
-    | (
-        | SchemaType.Name
-        | SchemaType.Age
-        | SchemaType.Gender
-        | SchemaType.Email
-        | SchemaType.UUID
-        | SchemaType.Number
-        | SchemaType.String
-        | SchemaType.Boolean
-      )[];
+    | ObjectSchema[];
 }
+
 export namespace SchemaType {
   export type Name = "name";
   export type Age = "age";
