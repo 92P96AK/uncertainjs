@@ -36,17 +36,30 @@ export interface Schema {
 
 export type ObjectT =
   | "name"
+  | "username"
+  | "fullName"
+  | "firstName"
+  | "lastName"
+  | "serName"
+  | "date"
+  | "graph"
+  | "cordinates"
+  | "age"
+  | "rgb"
+  | "hex"
+  | "hls"
+  | "emoji"
+  | "imageUrl"
   | "age"
   | "gender"
   | "email"
   | "uuid"
   | "shortDescription"
   | "longDescription"
-  | "name"
   | "boolean"
   | "string"
-  | "age"
   | "postalCode"
+  | "password"
   | "number";
 
 export interface IFPayload {

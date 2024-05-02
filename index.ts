@@ -40,7 +40,9 @@ export class Random {
     return prop;
   }
 
-  private getRandomvalue(type: string): string | number | boolean {
+  private getRandomvalue(
+    type: string
+  ): string | number | boolean | Date | number[][] | Object {
     switch (type) {
       case "string":
         return this.generateRandomString();
@@ -48,6 +50,50 @@ export class Random {
         return this.generateRandomNumber();
       case "boolean":
         return this.generateRandomBoolean();
+      case "age":
+        return this.generateRandomAge();
+      case "gender":
+        return this.generateRandomGender();
+      case "email":
+        return this.generateRandomEmail();
+      // case "uuid":
+      //   return this.generateRandomBoolean();  remain
+      case "shortDescription":
+        return this.generateRandomShortDescrption();
+      case "longDescription":
+        return this.generateRandomLongDescription();
+      case "postalCode":
+        return this.generateRandomNumber(1111, 9999);
+      case "password":
+        return this.generateRandomPassword();
+      case "date":
+        return this.getRandomDate();
+      case "graph":
+        return this.generateRandomGraph();
+      case "cordinates":
+        return this.generateRandomCoordinates();
+      case "rgb":
+        return this.generateRandomRGBColor();
+      case "hex":
+        return this.generateRandomHEXColor();
+      case "hls":
+        return this.generateRandomHSLColor();
+      case "emoji":
+        return this.generateRandomEmoticon();
+      case "imageUrl":
+        return this.generateRandomImageUrl();
+      case "serName":
+        return this.generateRandomSerName();
+      case "fullName":
+        return this.generateRandomFullName();
+      case "name":
+        return this.generateRandomFullName();
+      case "username":
+        return this.generateRandomUserName();
+      case "lastName":
+        return this.generateRandomSerName();
+      case "firstName":
+        return this.generateRandomName();
       default:
         return "";
     }
@@ -104,6 +150,10 @@ export class Random {
 
   public generateRandomBoolean(): boolean {
     return Math.random() < 0.5;
+  }
+
+  public generateRandomGender(): "M" | "F" {
+    return Math.random() < 0.5 ? "M" : "F";
   }
 
   public generateRandomGraph(
@@ -282,12 +332,13 @@ export class Random {
       if (schema.hasOwnProperty(key)) {
         const typeOrArray = schema[key];
         if (Array.isArray(typeOrArray)) {
-          result[key] =
-            typeOrArray[Math.floor(Math.random() * typeOrArray.length)];
+          result[key] = [
+            ...typeOrArray.map((arr) => this.generateRandomObject(arr)),
+          ];
         } else if (typeof typeOrArray === "object") {
           result[key] = this.generateRandomObject(typeOrArray);
         } else {
-          result[key] = this.getRandomvalue(typeOrArray as string);
+          result[key] = this.getRandomvalue(typeOrArray);
         }
       }
     }
