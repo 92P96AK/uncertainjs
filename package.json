@@ -41,7 +41,13 @@
     "random short description",
     "random long description",
     "random age",
-    "random email"
+    "random email",
+    "uuid",
+    "uuid2",
+    "uuid3",
+    "uuid4",
+    "uuid5",
+    "uncertainjs"
   ],
   "author": "pradip kharal",
   "license": "MIT",
