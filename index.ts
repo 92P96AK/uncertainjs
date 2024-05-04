@@ -1,5 +1,5 @@
 import fs from "fs";
-import crypto from 'crypto'
+import crypto from "crypto";
 
 import {
   ADJECTIVES,
@@ -51,15 +51,15 @@ export class Random {
     return Uint8Array.from(uuid.split("-").map((hex) => parseInt(hex, 16)));
   }
 
-  private stringToBytes(str:string) {
-    const encoder = new TextEncoder()
-    return encoder.encode(str)
+  private stringToBytes(str: string) {
+    const encoder = new TextEncoder();
+    return encoder.encode(str);
   }
 
   private bytesToUUID(bytes: Buffer) {
     return Array.from(bytes)
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('')
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
   }
 
   private getRandomvalue(
@@ -528,5 +528,26 @@ export class Random {
     md5Hash[8] |= 0x80;
 
     return this.bytesToUUID(md5Hash);
+  }
+
+  public UUIDV4() {
+    const uuidTime = new Date().getTime();
+    const uuidClockSeq = Math.floor(Math.random() * 16384);
+    const uuidNode = Math.floor(Math.random() * 16777216);
+    const uuidTimestamp = uuidTime * 10000 + 0x01b21dd213814000;
+    const uuidClockSeqHi = (uuidClockSeq & 0x3fff) | 0x8000;
+    const uuidNodeHi = ((uuidNode & 0xffffff) | 0x01000000) % 0x1000000;
+
+    return (
+      this.hex(uuidTimestamp, 16) +
+      "-" +
+      this.hex(uuidClockSeq, 4) +
+      "-" +
+      this.hex(uuidClockSeqHi, 4) +
+      "-" +
+      this.hex(uuidNode, 6) +
+      "-" +
+      this.hex(uuidNodeHi, 6)
+    );
   }
 }
