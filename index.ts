@@ -1,4 +1,6 @@
 import fs from "fs";
+import crypto from 'crypto'
+
 import {
   ADJECTIVES,
   CHARACTERS,
@@ -43,6 +45,21 @@ export class Random {
   private hex(value: number, length: number) {
     const str = value.toString(16);
     return "0".repeat(length - str.length) + str;
+  }
+
+  private uuidToBytes(uuid: string) {
+    return Uint8Array.from(uuid.split("-").map((hex) => parseInt(hex, 16)));
+  }
+
+  private stringToBytes(str:string) {
+    const encoder = new TextEncoder()
+    return encoder.encode(str)
+  }
+
+  private bytesToUUID(bytes: Buffer) {
+    return Array.from(bytes)
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('')
   }
 
   private getRandomvalue(
@@ -479,7 +496,7 @@ export class Random {
     const posixUid = uid;
     const posixGid = gid;
     const uuidTimeLow = timestamp & 0xffffffff;
-    const uuidTimeMid = (timestamp >> 32) & 0xfffff ;
+    const uuidTimeMid = (timestamp >> 32) & 0xfffff;
     const uuidTimeHiAndVersion = ((timestamp >> 48) & 0x0fff) | 0x1000;
     const uuidClockSeqHiAndReserved = (posixUid << 24) | (posixGid << 16);
     const uuidClockSeqLow = 0;
@@ -494,5 +511,22 @@ export class Random {
       "-" +
       this.hex(uuidClockSeqLow, 8)
     );
+  }
+
+  public UUIDV3(namespace: string, name: string) {
+    const namespaceBytes = this.uuidToBytes(namespace);
+    const nameBytes = this.stringToBytes(name);
+    const combinedBytes = new Uint8Array(
+      namespaceBytes.length + nameBytes.length
+    );
+    combinedBytes.set(namespaceBytes);
+    combinedBytes.set(nameBytes, namespaceBytes.length);
+    const md5Hash = crypto.createHash("md5").update(combinedBytes).digest();
+    md5Hash[6] &= 0x0f;
+    md5Hash[6] |= 0x30;
+    md5Hash[8] &= 0x3f;
+    md5Hash[8] |= 0x80;
+
+    return this.bytesToUUID(md5Hash);
   }
 }
