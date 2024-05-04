@@ -77,8 +77,8 @@ export class Random {
         return this.generateRandomGender();
       case "email":
         return this.generateRandomEmail();
-      // case "uuid":
-      //   return this.generateRandomBoolean();  remain
+      case "uuid":
+        return this.UUIDV4();
       case "shortDescription":
         return this.generateRandomShortDescrption();
       case "longDescription":
@@ -92,7 +92,7 @@ export class Random {
       case "graph":
         return this.generateRandomGraph();
       case "cordinates":
-        return this.generateRandomCoordinates();
+        return this.generateRandomCoordinate();
       case "rgb":
         return this.generateRandomRGBColor();
       case "hex":
@@ -198,7 +198,7 @@ export class Random {
     return graph;
   }
 
-  public generateRandomCoordinates(
+  public generateRandomCoordinate(
     minLat = -90,
     maxLat = 90,
     minLng = -180,
