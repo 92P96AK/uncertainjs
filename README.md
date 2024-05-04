@@ -24,6 +24,69 @@ const random = new Random();
 ```
 
 ## Features
+
+
+### generateRandomObject
+
+you can generate random object with specified schema.
+
+name, username, fullName, firstName,lastName, serName, date,graph, cordinates, age, rgb, hex, hls, emoji, imageUrl, age, gender, email, uuid, shortDescription, longDescription, boolean, string, postalCode, password and  number are supported type.
+
+to generate random object you need to define schema as 
+
+```js client 
+ const schema: Schema = {
+    id: "uuid",
+    name: {
+      firstName: "firstName",
+      lastName: "serName",
+    },
+    password: "password",
+    username: "username",
+    emai: "email",
+    age: "age",
+    isActive: "boolean",
+    bio: "shortDescription",
+    thoughts: "longDescription",
+    imageUrl: "imageUrl",
+    address: {
+      postalCode: "postalCode",
+      cordinates: "cordinates",
+      city: "string",
+    },
+    favouriteColor: "hex",
+    dob: "date",
+  };
+```
+now simply calling 
+```js client
+  const response = random.generateRandomObject(schema);
+```
+you can get response as 
+
+```js client 
+{
+  id: '01ef0a4dc9eb5f20-091d-891d-1edd2b-1edd2b',
+  name: { firstName: 'woxezid', lastName: 'jiowuul' },
+  password: '/b9>tgR',
+  username: 'mytp321',
+  emai: 'uajz712@einrot.com',
+  age: 48,
+  isActive: true,
+  bio: 'Charming project that incites your life.',
+  thoughts: 'Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Graceful reporting that enriches your reporting and enriches your Graceful reporting.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Graceful reporting that enriches your reporting and enriches your Graceful reporting.Lively review that sparks your review and sparks your Lively review.',
+  imageUrl: 'https://picsum.photos/800/600?random=1671449',
+  address: {
+    postalCode: 5697,
+    cordinates: { latitude: -68.26154457162507, longitude: 42.82423323921353 },
+    city: 'F0nmIQ4aGR'
+  },
+  favouriteColor: '#79e072',
+  dob: 1976-01-21T22:17:08.213Z
+}
+
+```
+
 ### getRandomElement
  get random element of an array.
 
@@ -195,66 +258,6 @@ you can also pass props as
 
 ```js client 
   const res = random.generateRandomString();
-
-```
-### generateRandomObject
-
-you can generate random object with specified schema.
-
-name, username, fullName, firstName,lastName, serName, date,graph, cordinates, age, rgb, hex, hls, emoji, imageUrl, age, gender, email, uuid, shortDescription, longDescription, boolean, string, postalCode, password and  number are supported type.
-
-to generate random object you need to define schema as 
-
-```js client 
- const schema: Schema = {
-    id: "uuid",
-    name: {
-      firstName: "firstName",
-      lastName: "serName",
-    },
-    password: "password",
-    username: "username",
-    emai: "email",
-    age: "age",
-    isActive: "boolean",
-    bio: "shortDescription",
-    thoughts: "longDescription",
-    imageUrl: "imageUrl",
-    address: {
-      postalCode: "postalCode",
-      cordinates: "cordinates",
-      city: "string",
-    },
-    favouriteColor: "hex",
-    dob: "date",
-  };
-```
-now simply calling 
-```js client
-  const response = random.generateRandomObject(schema);
-```
-you can get response as 
-
-```js client 
-{
-  id: '01ef0a4dc9eb5f20-091d-891d-1edd2b-1edd2b',
-  name: { firstName: 'woxezid', lastName: 'jiowuul' },
-  password: '/b9>tgR',
-  username: 'mytp321',
-  emai: 'uajz712@einrot.com',
-  age: 48,
-  isActive: true,
-  bio: 'Charming project that incites your life.',
-  thoughts: 'Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Graceful reporting that enriches your reporting and enriches your Graceful reporting.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Impeccable creativity that amplifies your creativity and amplifies your Impeccable creativity.Rich transition that guides your transition and guides your Rich transition.Graceful reporting that enriches your reporting and enriches your Graceful reporting.Lively review that sparks your review and sparks your Lively review.',
-  imageUrl: 'https://picsum.photos/800/600?random=1671449',
-  address: {
-    postalCode: 5697,
-    cordinates: { latitude: -68.26154457162507, longitude: 42.82423323921353 },
-    city: 'F0nmIQ4aGR'
-  },
-  favouriteColor: '#79e072',
-  dob: 1976-01-21T22:17:08.213Z
-}
 
 ```
 
