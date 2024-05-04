@@ -40,6 +40,11 @@ export class Random {
     return prop;
   }
 
+  private hex(value: number, length: number) {
+    const str = value.toString(16);
+    return "0".repeat(length - str.length) + str;
+  }
+
   private getRandomvalue(
     type: string
   ): string | number | boolean | Date | number[][] | Object {
@@ -467,5 +472,27 @@ export class Random {
     } catch (error) {
       throw new Error(`${error}`);
     }
+  }
+
+  public UUIDV2(uid = 0, gid = 0) {
+    const timestamp = new Date().getTime();
+    const posixUid = uid;
+    const posixGid = gid;
+    const uuidTimeLow = timestamp & 0xffffffff;
+    const uuidTimeMid = (timestamp >> 32) & 0xfffff ;
+    const uuidTimeHiAndVersion = ((timestamp >> 48) & 0x0fff) | 0x1000;
+    const uuidClockSeqHiAndReserved = (posixUid << 24) | (posixGid << 16);
+    const uuidClockSeqLow = 0;
+    return (
+      this.hex(uuidTimeLow, 8) +
+      "-" +
+      this.hex(uuidTimeMid % 0x10000, 4) +
+      "-" +
+      this.hex(uuidTimeHiAndVersion, 4) +
+      "-" +
+      this.hex(uuidClockSeqHiAndReserved, 4) +
+      "-" +
+      this.hex(uuidClockSeqLow, 8)
+    );
   }
 }
