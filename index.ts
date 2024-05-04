@@ -3,7 +3,6 @@ import crypto from "crypto";
 
 import {
   ADJECTIVES,
-  CHARACTERS,
   CONSONANTS,
   DISPOSABLE_EMAIL_PROVIDER,
   LOWER_CASE_CHARS,
@@ -549,5 +548,21 @@ export class Random {
       "-" +
       this.hex(uuidNodeHi, 6)
     );
+  }
+
+  public UUIDV5(namespace: string, name: string) {
+    const namespaceBytes = this.uuidToBytes(namespace);
+    const nameBytes = this.stringToBytes(name);
+    const combinedBytes = new Uint8Array(
+      namespaceBytes.length + nameBytes.length
+    );
+    combinedBytes.set(namespaceBytes);
+    combinedBytes.set(nameBytes, namespaceBytes.length);
+    const sha1Hash = crypto.createHash("sha1").update(combinedBytes).digest();
+    sha1Hash[6] &= 0x0f;
+    sha1Hash[6] |= 0x50;
+    sha1Hash[8] &= 0x3f;
+    sha1Hash[8] |= 0x80;
+    return this.bytesToUUID(sha1Hash);
   }
 }
