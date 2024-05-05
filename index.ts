@@ -12,7 +12,9 @@ import {
   UPPER_CASE_CHARS,
   VERBS,
   VOWELS,
-  randomImageUrls,
+  RANDOM_IMAGE_BASE_URLS,
+  CITIES,
+  COUNTRIES,
 } from "./constants";
 import {
   IFParsePayload,
@@ -115,6 +117,10 @@ export class Random {
         return this.generateRandomSerName();
       case "firstName":
         return this.generateRandomName();
+      case "city":
+        return this.generateRandomCity();
+      case "country":
+        return this.generateRandomCountry();
       default:
         return "";
     }
@@ -309,8 +315,8 @@ export class Random {
     try {
       const height = props?.height ?? 600;
       const width = props?.width ?? 800;
-      const { randomImageUrls: baseUrl } = this.getRandomElement({
-        randomImageUrls,
+      const { RANDOM_IMAGE_BASE_URLS: baseUrl } = this.getRandomElement({
+        RANDOM_IMAGE_BASE_URLS,
       });
       return `${baseUrl}/${width}/${height}?random=${Math.floor(
         Math.random() * 10000000
@@ -376,6 +382,16 @@ export class Random {
       }
     }
     return name;
+  }
+
+  public generateRandomCity() {
+    const { CITIES: city } = this.getRandomElement({ CITIES });
+    return city;
+  }
+
+  public generateRandomCountry() {
+    const { COUNTRIES: country } = this.getRandomElement({ COUNTRIES });
+    return country;
   }
 
   public generateRandomSerName(length = 7) {
