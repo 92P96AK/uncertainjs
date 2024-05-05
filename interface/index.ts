@@ -44,6 +44,8 @@ export type ObjectT =
   | "date"
   | "graph"
   | "cordinates"
+  | "country"
+  | "city"
   | "age"
   | "rgb"
   | "hex"
