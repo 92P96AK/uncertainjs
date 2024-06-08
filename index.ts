@@ -27,10 +27,11 @@ import {
   IRandomNoise,
   IRandomNoiseOptions,
   IRandomUsername,
+  RelationalSchema,
   Schema,
 } from "./interface";
 import path from "path";
-export { Schema } from "./interface";
+export { Schema, RelationalSchema } from "./interface";
 export class Random {
   constructor() {}
 
@@ -356,6 +357,7 @@ export class Random {
   public generateRandomObject(schema: Schema): Record<string, any> {
     const result: Record<string, any> = {};
     for (const key in schema) {
+      console.log({ key });
       if (schema.hasOwnProperty(key)) {
         const typeOrArray = schema[key];
         if (Array.isArray(typeOrArray)) {
@@ -368,6 +370,17 @@ export class Random {
           result[key] = this.getRandomvalue(typeOrArray);
         }
       }
+    }
+    return result;
+  }
+  
+  public generateRandomObjectWithRelation(
+    schema: RelationalSchema
+  ): Record<string, any> {
+    const result: Record<string, any> = {};
+    for (const key in schema) {
+      console.log({ key });
+   
     }
     return result;
   }
