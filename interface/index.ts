@@ -30,6 +30,22 @@ export interface ILatLong {
   longitude: number;
 }
 
+export interface RelationalSchema {
+  [key: string]:
+    | {
+        type: ObjectT;
+        min?: number;
+        max?: number;
+        callback?: (result: string, error: Error) => void;
+        include?: Array<string>;
+        exclude?: Array<string>;
+        isPrimary?: true;
+        foreignKey?: string;
+      }
+    | RelationalSchema
+    | RelationalSchema[];
+}
+
 export interface Schema {
   [key: string]: ObjectT | Schema | Schema[];
 }
