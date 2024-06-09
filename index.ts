@@ -386,11 +386,16 @@ export class Random {
           for (const colKey in tableObject) {
             const colObj = tableObject[colKey];
             if (tableObject.hasOwnProperty(colKey)) {
-              data[`${colKey}`] =
+              const res =
                 !!(colObj.required === undefined || colObj.required) ||
                 colObj.isPrimary
                   ? this.getRandomvalue(colObj.type)
                   : null;
+              if (colObj?.callback && !colObj.isPrimary) {
+                data[`${colKey}`] = colObj.callback(res);
+              } else {
+                data[`${colKey}`] = res;
+              }
               // include default later
               //  also implement relation
             }
