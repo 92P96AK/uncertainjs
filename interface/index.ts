@@ -31,19 +31,21 @@ export interface ILatLong {
 }
 
 export interface RelationalSchema {
-  [key: string]:
-    | {
-        type: ObjectT;
-        min?: number;
-        max?: number;
-        callback?: (result: string, error: Error) => void;
-        include?: Array<string>;
-        exclude?: Array<string>;
-        isPrimary?: true;
-        foreignKey?: string;
-      }
-    | RelationalSchema
-    | RelationalSchema[];
+  [key: string]: {
+    [key: string]: {
+      type: ObjectT;
+      min?: number;
+      max?: number;
+      callback?: (result: string, error: Error) => void;
+      include?: Array<string>;
+      exclude?: Array<string>;
+      isPrimary?: true;
+      foreignKey?: string;
+      required?: boolean;
+      isSerial?: boolean;
+      startSerialFrom?: number;
+    };
+  };
 }
 
 export interface Schema {
