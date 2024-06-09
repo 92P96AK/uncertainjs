@@ -37,13 +37,13 @@ export interface RelationalSchema {
       min?: number;
       max?: number;
       callback?: (result: any) => void;
-      include?: Array<string>;
-      exclude?: Array<string>;
+      // include?: Array<string>;
+      // exclude?: Array<string>;
       isPrimary?: true;
       foreignKey?: string;
       required?: boolean;
-      isSerial?: boolean;
-      startSerialFrom?: number;
+      // isSerial?: boolean;
+      // startSerialFrom?: number;
       default?: any;
     };
   };
