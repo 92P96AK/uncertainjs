@@ -357,7 +357,6 @@ export class Random {
   public generateRandomObject(schema: Schema): Record<string, any> {
     const result: Record<string, any> = {};
     for (const key in schema) {
-      console.log({ key });
       if (schema.hasOwnProperty(key)) {
         const typeOrArray = schema[key];
         if (Array.isArray(typeOrArray)) {
@@ -373,14 +372,32 @@ export class Random {
     }
     return result;
   }
-  
+
   public generateRandomObjectWithRelation(
-    schema: RelationalSchema
-  ): Record<string, any> {
-    const result: Record<string, any> = {};
-    for (const key in schema) {
-      console.log({ key });
-   
+    schema: RelationalSchema,
+    numberOfData = 1
+  ): Record<string, Array<Record<string, any>>> {
+    const result: Record<string, Array<Record<string, any>>> = {};
+    for (const table in schema) {
+      if (schema.hasOwnProperty(table)) {
+        result[`${table}`] = Array.from({ length: numberOfData }).map(() => {
+          const data: Record<string, any> = {};
+          const tableObject = schema[table];
+          for (const colKey in tableObject) {
+            const colObj = tableObject[colKey];
+            if (tableObject.hasOwnProperty(colKey)) {
+              data[`${colKey}`] =
+                !!(colObj.required === undefined || colObj.required) ||
+                colObj.isPrimary
+                  ? this.getRandomvalue(colObj.type)
+                  : null;
+              // include default later
+              //  also implement relation
+            }
+          }
+          return data;
+        });
+      }
     }
     return result;
   }
