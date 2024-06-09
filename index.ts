@@ -378,6 +378,7 @@ export class Random {
     numberOfData = 1
   ): Record<string, Array<Record<string, any>>> {
     const result: Record<string, Array<Record<string, any>>> = {};
+    const relationObject: Record<string, any> = {};
     for (const table in schema) {
       if (schema.hasOwnProperty(table)) {
         result[`${table}`] = Array.from({ length: numberOfData }).map(() => {
@@ -386,6 +387,18 @@ export class Random {
           for (const colKey in tableObject) {
             const colObj = tableObject[colKey];
             if (tableObject.hasOwnProperty(colKey)) {
+              if (colObj?.isPrimary) {
+                relationObject[`${table}`] = colKey;
+              }
+              if (colObj?.foreignKey) {
+                const [relationalTable, relationalKey, ..._] =
+                  colObj.foreignKey.split(".");
+                const { relData } = this.getRandomElement({
+                  relData: result[`${relationalTable}`] || [],
+                });
+                data[`${colKey}`] = relData[`${relationalKey}`];
+                continue;
+              }
               const res =
                 !!(colObj.required === undefined || colObj.required) ||
                 colObj.isPrimary
@@ -396,10 +409,12 @@ export class Random {
               } else {
                 data[`${colKey}`] = res;
               }
-              // include default later
-              //  also implement relation
+              if (!res && colObj?.default) {
+                data[`${colKey}`] = colObj.default;
+              }
             }
           }
+          // implement include exclude
           return data;
         });
       }
