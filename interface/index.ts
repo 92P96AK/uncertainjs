@@ -44,6 +44,7 @@ export interface RelationalSchema {
       required?: boolean;
       isSerial?: boolean;
       startSerialFrom?: number;
+      default?: any;
     };
   };
 }
