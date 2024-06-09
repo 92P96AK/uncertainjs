@@ -18,12 +18,85 @@ yarn add uncertainjs
 ## Usage
 
 ```js client
-import { Random , Schema} from "uncertainjs";
+import { Random , Schema, RelationalSchema} from "uncertainjs";
 
 const random = new Random();
 ```
 
 ## Features
+
+
+### generateRandomObjectWithRelation
+
+you can generate random relational object with specified schema.
+
+name, username, fullName, firstName,lastName, serName, date,graph, cordinates, age, rgb, hex, hls, emoji, imageUrl, age, gender, email, uuid, shortDescription, longDescription, boolean, string, postalCode, password and  number are supported type.
+
+to generate random object you need to define schema as 
+
+```js client 
+  const schema: RelationalSchema = {
+    users: {
+      id: {
+        type: "uuid",
+        isPrimary: true,
+        required: false,
+      },
+      country: {
+        type: "country",
+        callback: (result: any) => {
+          return result.name;
+        },
+      },
+      coverImageUrl: { type: "imageUrl" },
+      createdAt: { type: "date" },
+      updatedAt: { type: "date", required: false },
+      deletedAt: { type: "date", required: false },
+      disabled: { type: "boolean" },
+      dob: { type: "date" },
+      email: { type: "email" },
+    },
+    settings: {
+      id: {
+        type: "uuid",
+        isPrimary: true,
+      },
+      userId: {
+        type: "uuid",
+        foreignKey: "users.id",
+      },
+    },
+  };
+```
+now simply calling 
+```js client
+  const response = random.generateRandomObjectWithRelation(schema);
+```
+you can get response as 
+
+```js client 
+{
+  users: [
+    {
+      id: '01ef269dae626660-2a63-aa63-d13b7c-d13b7c',
+      country: 'Cocos (Keeling) Islands',
+      coverImageUrl: 'https://picsum.photos/800/600?random=7027562',
+      createdAt: 2014-06-11T21:35:51.206Z,
+      updatedAt: null,
+      deletedAt: null,
+      disabled: false,
+      dob: 1974-09-10T08:48:50.055Z,
+      email: 'odpb951@mailinator.com'
+    }
+  ],
+  settings: [
+    {
+      id: '01ef269dae626660-1d3b-9d3b-03f2e3-03f2e3',
+      userId: '01ef269dae626660-2a63-aa63-d13b7c-d13b7c'
+    }
+  ]
+}
+```
 
 
 ### generateRandomObject
