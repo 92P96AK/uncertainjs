@@ -36,7 +36,7 @@ export interface RelationalSchema {
       type: ObjectT;
       min?: number;
       max?: number;
-      callback?: (result: string, error: Error) => void;
+      callback?: (result: any) => void;
       include?: Array<string>;
       exclude?: Array<string>;
       isPrimary?: true;
