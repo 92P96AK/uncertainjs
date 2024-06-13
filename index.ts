@@ -127,6 +127,78 @@ export class Random {
     }
   }
 
+  private getRandomvalueWithProps({
+    type,
+    min,
+    max,
+  }: {
+    type: string;
+    min?: number;
+    max?: number;
+  }): string | number | boolean | Date | number[][] | Object {
+    switch (type) {
+      case "string":
+        return this.generateRandomString();
+      case "number":
+        return this.generateRandomNumber(min, max);
+      case "boolean":
+        return this.generateRandomBoolean();
+      case "age":
+        return this.generateRandomAge({
+          min,
+          max,
+        });
+      case "gender":
+        return this.generateRandomGender();
+      case "email":
+        return this.generateRandomEmail();
+      case "uuid":
+        return this.UUIDV4();
+      case "shortDescription":
+        return this.generateRandomShortDescrption();
+      case "longDescription":
+        return this.generateRandomLongDescription();
+      case "postalCode":
+        return this.generateRandomNumber(1111, 9999);
+      case "password":
+        return this.generateRandomPassword();
+      case "date":
+        return this.getRandomDate();
+      case "graph":
+        return this.generateRandomGraph();
+      case "cordinates":
+        return this.generateRandomCoordinate();
+      case "rgb":
+        return this.generateRandomRGBColor();
+      case "hex":
+        return this.generateRandomHEXColor();
+      case "hls":
+        return this.generateRandomHSLColor();
+      case "emoji":
+        return this.generateRandomEmoticon();
+      case "imageUrl":
+        return this.generateRandomImageUrl();
+      case "serName":
+        return this.generateRandomSerName();
+      case "fullName":
+        return this.generateRandomFullName();
+      case "name":
+        return this.generateRandomFullName();
+      case "username":
+        return this.generateRandomUserName();
+      case "lastName":
+        return this.generateRandomSerName();
+      case "firstName":
+        return this.generateRandomName();
+      case "city":
+        return this.generateRandomCity();
+      case "country":
+        return this.generateRandomCountry();
+      default:
+        return "";
+    }
+  }
+
   private parsePayload(payload?: IFPayload): IFParsePayload {
     const resp = {} as IFParsePayload;
     resp.min = payload?.min ?? 0;
@@ -402,7 +474,11 @@ export class Random {
               const res =
                 !!(colObj.required === undefined || colObj.required) ||
                 colObj.isPrimary
-                  ? this.getRandomvalue(colObj.type)
+                  ? this.getRandomvalueWithProps({
+                      type: colObj.type,
+                      min: colObj?.min,
+                      max: colObj?.max,
+                    })
                   : null;
               if (colObj?.callback && !colObj.isPrimary) {
                 data[`${colKey}`] = colObj.callback(res);
