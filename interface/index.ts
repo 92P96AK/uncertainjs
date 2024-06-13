@@ -42,8 +42,7 @@ export interface RelationalSchema {
       isPrimary?: true;
       foreignKey?: string;
       required?: boolean;
-      // isSerial?: boolean;
-      // startSerialFrom?: number;
+      serialStartFrom?: number;
       default?: any;
     };
   };
@@ -81,6 +80,7 @@ export type ObjectT =
   | "string"
   | "postalCode"
   | "password"
+  | "serial"
   | "number";
 
 export interface IFPayload {
