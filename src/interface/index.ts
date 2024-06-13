@@ -30,28 +30,6 @@ export interface ILatLong {
   longitude: number;
 }
 
-export interface RelationalSchema {
-  [key: string]: {
-    [key: string]: {
-      type: ObjectT;
-      min?: number;
-      max?: number;
-      callback?: (result: any) => void;
-      // include?: Array<string>;
-      // exclude?: Array<string>;
-      isPrimary?: true;
-      foreignKey?: string;
-      required?: boolean;
-      serialStartFrom?: number;
-      default?: any;
-    };
-  };
-}
-
-export interface Schema {
-  [key: string]: ObjectT | Schema | Schema[];
-}
-
 export type ObjectT =
   | "name"
   | "username"
@@ -82,6 +60,38 @@ export type ObjectT =
   | "password"
   | "serial"
   | "number";
+
+type BaseFieldSchema = {
+  min?: number;
+  max?: number;
+  callback?: (result: any) => void;
+  isPrimary?: true;
+  foreignKey?: string;
+  required?: boolean;
+  default?: any;
+};
+
+type SerialFieldSchema = BaseFieldSchema & {
+  type: "serial";
+  serialStartFrom?: number;
+};
+
+type NonSerialFieldSchema = BaseFieldSchema & {
+  type: Exclude<ObjectT, "serial">;
+  serialStartFrom?: never;
+};
+
+type FieldSchema = SerialFieldSchema | NonSerialFieldSchema;
+
+export interface RelationalSchema {
+  [key: string]: {
+    [key: string]: FieldSchema;
+  };
+}
+
+export interface Schema {
+  [key: string]: ObjectT | Schema | Schema[];
+}
 
 export interface IFPayload {
   min?: number;

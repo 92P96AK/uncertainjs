@@ -1,4 +1,4 @@
-import fs from "fs";
+import * as fs from "fs";
 import crypto from "crypto";
 
 import {
@@ -15,7 +15,7 @@ import {
   RANDOM_IMAGE_BASE_URLS,
   CITIES,
   COUNTRIES,
-} from "./constants";
+} from "./constants/index";
 import {
   IFParsePayload,
   IFPayload,
@@ -29,9 +29,9 @@ import {
   IRandomUsername,
   RelationalSchema,
   Schema,
-} from "./interface";
+} from "./interface/index";
 import path from "path";
-export { Schema, RelationalSchema } from "./interface";
+export type { Schema, RelationalSchema } from "./interface/index";
 export class Random {
   private serial: number;
   constructor() {
@@ -145,7 +145,7 @@ export class Random {
     serialStartFrom?: number;
   }): string | number | boolean | Date | number[][] | Object {
     if (type === "serial" && this.serial === 0 && serialStartFrom) {
-      this.serial = serialStartFrom;
+      this.serial = serialStartFrom - 1 > 0 ? serialStartFrom - 1 : 0;
     }
     switch (type) {
       case "string":
