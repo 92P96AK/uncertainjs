@@ -33,7 +33,10 @@ import {
 import path from "path";
 export { Schema, RelationalSchema } from "./interface";
 export class Random {
-  constructor() {}
+  private serial: number;
+  constructor() {
+    this.serial = 0;
+  }
 
   private parseAudioProps(props?: IRandomNoiseOptions): IRandomNoise {
     const prop = {} as IRandomNoise;
@@ -122,6 +125,9 @@ export class Random {
         return this.generateRandomCity();
       case "country":
         return this.generateRandomCountry();
+      case "serial": {
+        return this.generateSerialNumber();
+      }
       default:
         return "";
     }
@@ -131,11 +137,16 @@ export class Random {
     type,
     min,
     max,
+    serialStartFrom,
   }: {
     type: string;
     min?: number;
     max?: number;
+    serialStartFrom?: number;
   }): string | number | boolean | Date | number[][] | Object {
+    if (type === "serial" && this.serial === 0 && serialStartFrom) {
+      this.serial = serialStartFrom;
+    }
     switch (type) {
       case "string":
         return this.generateRandomString();
@@ -194,6 +205,9 @@ export class Random {
         return this.generateRandomCity();
       case "country":
         return this.generateRandomCountry();
+      case "serial": {
+        return this.generateSerialNumber();
+      }
       default:
         return "";
     }
@@ -478,6 +492,7 @@ export class Random {
                       type: colObj.type,
                       min: colObj?.min,
                       max: colObj?.max,
+                      serialStartFrom: colObj?.serialStartFrom,
                     })
                   : null;
               if (colObj?.callback && !colObj.isPrimary) {
@@ -518,6 +533,11 @@ export class Random {
   public generateRandomCountry() {
     const { COUNTRIES: country } = this.getRandomElement({ COUNTRIES });
     return country;
+  }
+
+  public generateSerialNumber() {
+    this.serial++;
+    return this.serial;
   }
 
   public generateRandomSerName(length = 7) {
