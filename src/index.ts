@@ -31,6 +31,7 @@ import {
   Schema,
 } from "./interface/index";
 import path from "path";
+import { validateRelationalSchema } from "./utils";
 export type { Schema, RelationalSchema } from "./interface/index";
 export class Random {
   private serial: number;
@@ -125,9 +126,8 @@ export class Random {
         return this.generateRandomCity();
       case "country":
         return this.generateRandomCountry();
-      case "serial": {
+      case "serial":
         return this.generateSerialNumber();
-      }
       default:
         return "";
     }
@@ -463,54 +463,70 @@ export class Random {
     schema: RelationalSchema,
     numberOfData = 1
   ): Record<string, Array<Record<string, any>>> {
-    const result: Record<string, Array<Record<string, any>>> = {};
-    const relationObject: Record<string, any> = {};
-    for (const table in schema) {
-      if (schema.hasOwnProperty(table)) {
-        result[`${table}`] = Array.from({ length: numberOfData }).map(() => {
-          const data: Record<string, any> = {};
-          const tableObject = schema[table];
-          for (const colKey in tableObject) {
-            const colObj = tableObject[colKey];
-            if (tableObject.hasOwnProperty(colKey)) {
-              if (colObj?.isPrimary) {
-                relationObject[`${table}`] = colKey;
-              }
-              if (colObj?.foreignKey) {
-                const [relationalTable, relationalKey, ..._] =
-                  colObj.foreignKey.split(".");
-                const { relData } = this.getRandomElement({
-                  relData: result[`${relationalTable}`] || [],
-                });
-                data[`${colKey}`] = relData[`${relationalKey}`];
-                continue;
-              }
-              const res =
-                !!(colObj.required === undefined || colObj.required) ||
-                colObj.isPrimary
-                  ? this.getRandomvalueWithProps({
-                      type: colObj.type,
-                      min: colObj?.min,
-                      max: colObj?.max,
-                      serialStartFrom: colObj?.serialStartFrom,
-                    })
-                  : null;
-              if (colObj?.callback && !colObj.isPrimary) {
-                data[`${colKey}`] = colObj.callback(res);
-              } else {
-                data[`${colKey}`] = res;
-              }
-              if (!res && colObj?.default) {
-                data[`${colKey}`] = colObj.default;
+    try {
+      /* 
+     -----  for later   -----
+     1. use type for foreign key , it should be tablename followed by . and its primary key field
+     2. implement include exclude
+    
+     */
+      const errors = validateRelationalSchema(schema);
+      if (errors) {
+        throw {
+          message: "Validation Error",
+          errors,
+        };
+      }
+      const result: Record<string, Array<Record<string, any>>> = {};
+      const relationObject: Record<string, any> = {};
+      for (const table in schema) {
+        if (schema.hasOwnProperty(table)) {
+          result[`${table}`] = Array.from({ length: numberOfData }).map(() => {
+            const data: Record<string, any> = {};
+            const tableObject = schema[table];
+            for (const colKey in tableObject) {
+              const colObj = tableObject[colKey];
+              if (tableObject.hasOwnProperty(colKey)) {
+                if (colObj?.isPrimary) {
+                  relationObject[`${table}`] = colKey;
+                }
+                if (colObj?.foreignKey) {
+                  const [relationalTable, relationalKey, ..._] =
+                    colObj.foreignKey.split(".");
+                  const { relData } = this.getRandomElement({
+                    relData: result[`${relationalTable}`] || [],
+                  });
+                  data[`${colKey}`] = relData[`${relationalKey}`];
+                  continue;
+                }
+                const res =
+                  !!(colObj.required === undefined || colObj.required) ||
+                  colObj.isPrimary
+                    ? this.getRandomvalueWithProps({
+                        type: colObj.type,
+                        min: colObj?.min,
+                        max: colObj?.max,
+                        serialStartFrom: colObj?.serialStartFrom,
+                      })
+                    : null;
+                if (colObj?.callback && !colObj.isPrimary) {
+                  data[`${colKey}`] = colObj.callback(res);
+                } else {
+                  data[`${colKey}`] = res;
+                }
+                if (!res && colObj?.default) {
+                  data[`${colKey}`] = colObj.default;
+                }
               }
             }
-          }
-          // implement include exclude
-          return data;
-        });
+            return data;
+          });
+        }
       }
+      return result;
+    } catch (error) {
+      throw error;
     }
-    return result;
   }
 
   public generateRandomName(length = 7) {
