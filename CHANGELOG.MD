@@ -1,6 +1,11 @@
 # Changelog
 
-## Version 0.0.9 (2024-06-10)
+## Version 0.0.16 (2024-06-10)
+
+### Added
+- Bug fixes
+
+## Version 0.0.15 (2024-06-10)
 
 ### Added
 - Bug fixes
