@@ -1,3 +1,5 @@
+import { DATA_TYPES } from "../constants";
+
 export interface IPasswordOptions {
   includeUppercase?: boolean;
   includeNumbers?: boolean;
@@ -30,38 +32,9 @@ export interface ILatLong {
   longitude: number;
 }
 
-export type ObjectT =
-  | "name"
-  | "username"
-  | "fullName"
-  | "firstName"
-  | "lastName"
-  | "serName"
-  | "date"
-  | "graph"
-  | "cordinates"
-  | "country"
-  | "city"
-  | "age"
-  | "rgb"
-  | "hex"
-  | "hls"
-  | "emoji"
-  | "imageUrl"
-  | "age"
-  | "gender"
-  | "email"
-  | "uuid"
-  | "shortDescription"
-  | "longDescription"
-  | "boolean"
-  | "string"
-  | "postalCode"
-  | "password"
-  | "serial"
-  | "number";
+export type ObjectT = (typeof DATA_TYPES)[number];
 
-type BaseFieldSchema = {
+export type BaseFieldSchema = {
   min?: number;
   max?: number;
   callback?: (result: any) => void;
@@ -71,17 +44,17 @@ type BaseFieldSchema = {
   default?: any;
 };
 
-type SerialFieldSchema = BaseFieldSchema & {
+export type SerialFieldSchema = BaseFieldSchema & {
   type: "serial";
   serialStartFrom?: number;
 };
 
-type NonSerialFieldSchema = BaseFieldSchema & {
+export type NonSerialFieldSchema = BaseFieldSchema & {
   type: Exclude<ObjectT, "serial">;
   serialStartFrom?: never;
 };
 
-type FieldSchema = SerialFieldSchema | NonSerialFieldSchema;
+export type FieldSchema = SerialFieldSchema | NonSerialFieldSchema;
 
 export interface RelationalSchema {
   [key: string]: {
