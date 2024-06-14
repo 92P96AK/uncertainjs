@@ -34,3 +34,30 @@ export const DISPOSABLE_EMAIL_PROVIDER = [
 ];
 export * from "./cities";
 export * from "./countries";
+export {
+  NAME,
+  USER_NAME,
+  FULL_NAME,
+  FIRST_NAME,
+  LAST_NAME,
+  SER_NAME,
+  DATE,
+  GRAPH,
+  CORDINATES,
+  COUNTRY,
+  CITY,
+  RGB,
+  HEX,
+  HLS,
+  EMOJI,
+  UUID,
+  SHORT_DESCRIPTION,
+  LONG_DESCRIPTION,
+  BOOLEAN,
+  STRING,
+  POSTAL_CODE,
+  PASSWORD,
+  SERIAL,
+  NUMBER,
+  DATA_TYPES,
+} from "./types";
