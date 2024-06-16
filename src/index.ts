@@ -708,23 +708,13 @@ export class Random {
   }
 
   public UUIDV4() {
-    const uuidTime = new Date().getTime();
-    const uuidClockSeq = Math.floor(Math.random() * 16384);
-    const uuidNode = Math.floor(Math.random() * 16777216);
-    const uuidTimestamp = uuidTime * 10000 + 0x01b21dd213814000;
-    const uuidClockSeqHi = (uuidClockSeq & 0x3fff) | 0x8000;
-    const uuidNodeHi = ((uuidNode & 0xffffff) | 0x01000000) % 0x1000000;
-
-    return (
-      this.hex(uuidTimestamp, 16) +
-      "-" +
-      this.hex(uuidClockSeq, 4) +
-      "-" +
-      this.hex(uuidClockSeqHi, 4) +
-      "-" +
-      this.hex(uuidNode, 6) +
-      "-" +
-      this.hex(uuidNodeHi, 6)
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = crypto.randomBytes(1)[0] % 16;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
     );
   }
 
