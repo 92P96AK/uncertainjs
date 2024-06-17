@@ -1,6 +1,6 @@
 {
   "name": "uncertainjs",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "generate and get random values",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -55,6 +55,7 @@
     "uuid4",
     "uuid5",
     "uncertainjs",
+    "ramdom object",
     "ramdom relational object"
   ],
   "author": "pradip kharal",
