@@ -15,6 +15,7 @@ import {
   RANDOM_IMAGE_BASE_URLS,
   CITIES,
   COUNTRIES,
+  DATE_TYPES,
 } from "./constants/index";
 import {
   IFParsePayload,
@@ -229,7 +230,9 @@ export class Random {
       if (obj.hasOwnProperty(key)) {
         const array = obj[key];
         if (array) {
-          result[key] = array[Math.floor(Math.random() * array.length)] as T;
+          result[key] = array[
+            crypto.randomBytes(4).readUInt32BE(0) % array.length
+          ] as T;
         }
       }
     }
@@ -237,11 +240,20 @@ export class Random {
   }
 
   public getRandomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return (
+      Math.floor(
+        crypto.randomBytes(4).readUInt32BE(0) /
+          (Math.pow(2, 32) / (max - min + 1))
+      ) + min
+    );
   }
 
   public getRandomFloat(min: number, max: number): number {
-    return Math.random() * (max - min) + min;
+    const range = max - min;
+    const randomBytes = crypto.randomBytes(4);
+    const randomNumber = randomBytes.readUInt32BE(0) / Math.pow(2, 32);
+    const randomFloatInRange = randomNumber * range + min;
+    return randomFloatInRange;
   }
 
   public getRandomCharacter(chars: string): string {
@@ -251,23 +263,77 @@ export class Random {
 
   public getRandomDate(
     startDate: Date = new Date(0),
-    endDate: Date = new Date()
-  ): Date {
+    endDate: Date = new Date(),
+    type: keyof typeof DATE_TYPES = "INTERVAL"
+  ): Date | string {
     try {
       const startTime = startDate.getTime();
       const endTime = endDate.getTime();
-      return new Date(startTime + Math.random() * (endTime - startTime));
+      switch (type) {
+        case DATE_TYPES.DATE: {
+          const randomTime = startTime + Math.random() * (endTime - startTime);
+          const randomDate = new Date(randomTime);
+          randomDate.setHours(0, 0, 0, 0);
+          return randomDate;
+        }
+        case DATE_TYPES.INTERVAL: {
+          if (startDate > endDate) {
+            throw new Error("startDate must be before endDate");
+          }
+          const diffMilliseconds = endTime - startTime;
+          const diffSeconds = Math.floor(diffMilliseconds / 1000);
+          const diffMinutes = Math.floor(diffSeconds / 60);
+          const diffHours = Math.floor(diffMinutes / 60);
+          const diffDays = Math.floor(diffHours / 24);
+          const hours = diffHours % 24;
+          const minutes = diffMinutes % 60;
+          const seconds = diffSeconds % 60;
+          return `${diffDays} days ${hours
+            .toString()
+            .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+        }
+        case DATE_TYPES.TIME: {
+          const hours = Math.floor(Math.random() * 24);
+          const minutes = Math.floor(Math.random() * 60);
+          const seconds = Math.floor(Math.random() * 60);
+          return `${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        }
+        case DATE_TYPES.TIMESTAMP: {
+          const randomTime = startTime + Math.random() * (endTime - startTime);
+          const randomTimestamp = new Date(randomTime);
+          return randomTimestamp.toISOString();
+        }
+        case DATE_TYPES.TIMESTAMPTZ: {
+          const randomTime = startTime + Math.random() * (endTime - startTime);
+          const randomTimestampTZ = new Date(randomTime);
+          return randomTimestampTZ.toISOString();
+        }
+        case DATE_TYPES.TIMETZ: {
+          const randomTime = startTime + Math.random() * (endTime - startTime);
+          const randomDate = new Date(randomTime);
+          const offsetMinutes = Math.floor(Math.random() * 1440) - 720;
+          randomDate.setUTCMinutes(randomDate.getUTCMinutes() + offsetMinutes);
+          return randomDate.toISOString();
+        }
+        default: {
+          return new Date(startTime + Math.random() * (endTime - startTime));
+        }
+      }
     } catch (error) {
       throw new Error(`${error}`);
     }
   }
 
   public generateRandomBoolean(): boolean {
-    return Math.random() < 0.5;
+    return (crypto.randomBytes(1)[0] & 1) === 0;
   }
 
   public generateRandomGender(): "M" | "F" {
-    return Math.random() < 0.5 ? "M" : "F";
+    return crypto.randomBytes(1)[0] % 2 === 0 ? "F" : "M";
   }
 
   public generateRandomGraph(
