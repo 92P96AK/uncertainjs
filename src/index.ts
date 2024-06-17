@@ -264,7 +264,7 @@ export class Random {
   public getRandomDate(
     startDate: Date = new Date(0),
     endDate: Date = new Date(),
-    type: keyof typeof DATE_TYPES = "INTERVAL"
+    type: keyof typeof DATE_TYPES = "TIMESTAMP"
   ): Date | string {
     try {
       const startTime = startDate.getTime();
