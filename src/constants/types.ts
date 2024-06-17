@@ -56,3 +56,12 @@ export const DATA_TYPES = [
   EMAIL,
   AGE,
 ] as const;
+
+export const DATE_TYPES = {
+  DATE: "DATE",
+  TIMETZ: "TIMETZ",
+  TIME: "TIME",
+  TIMESTAMP: "TIMESTAMP",
+  TIMESTAMPTZ: "TIMESTAMPTZ",
+  INTERVAL: "INTERVAL",
+};
