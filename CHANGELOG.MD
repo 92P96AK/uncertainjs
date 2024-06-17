@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.0.19 (2024-06-18)
+
+### Added
+- Random date props added
+- Bug fixes
+
 ## Version 0.0.18 (2024-06-10)
 
 ### Added
