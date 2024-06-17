@@ -60,4 +60,5 @@ export {
   SERIAL,
   NUMBER,
   DATA_TYPES,
+  DATE_TYPES,
 } from "./types";
