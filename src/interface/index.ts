@@ -1,4 +1,4 @@
-import { DATA_TYPES } from "../constants";
+import { DATA_TYPES, DATE_TYPES } from "../constants";
 
 export interface IPasswordOptions {
   includeUppercase?: boolean;
@@ -93,4 +93,9 @@ export interface IFullNamePayload {
 export interface IRandomUsername {
   includeNumbers?: boolean;
   length?: number;
+}
+export interface IRandomDate {
+  startDate?: Date;
+  endDate?: Date;
+  type?: keyof typeof DATE_TYPES;
 }
