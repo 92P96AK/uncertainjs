@@ -1,6 +1,6 @@
 {
   "name": "uncertainjs",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "generate and get random values",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
