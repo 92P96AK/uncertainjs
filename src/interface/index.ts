@@ -47,7 +47,7 @@ export type BaseFieldSchema = {
 export type SerialFieldSchema = BaseFieldSchema & {
   type: "serial";
   serialStartFrom?: number;
-  oneOf: never;
+  oneOf?: never;
 };
 
 export type UserDefinedSchema = BaseFieldSchema & {
@@ -60,7 +60,7 @@ export type UserDefinedSchema = BaseFieldSchema & {
 export type NonSerialFieldSchema = BaseFieldSchema & {
   type: Exclude<ObjectT, "serial">;
   serialStartFrom?: never;
-  oneOf: never;
+  oneOf?: never;
 };
 
 export type FieldSchema =
