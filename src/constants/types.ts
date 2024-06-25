@@ -26,9 +26,22 @@ export const POSTAL_CODE = "postalCode";
 export const PASSWORD = "password";
 export const SERIAL = "serial";
 export const NUMBER = "number";
+export const TIMESTAMPTZ = "timestamptz";
+export const TIMETZ = "timetz";
+export const TIME = "time";
+export const TIMESTAMP = "timestamp";
+export const INTERVAL = "interval";
+export const JSON = "json";
+export const JSONB = "jsonb";
+export const OBJECT = "object";
 
 export const DATA_TYPES = [
+  TIMETZ,
+  TIME,
+  TIMESTAMP,
+  TIMESTAMPTZ,
   NAME,
+  INTERVAL,
   USER_NAME,
   FULL_NAME,
   FIRST_NAME,
@@ -55,13 +68,17 @@ export const DATA_TYPES = [
   IMAGE_URL,
   EMAIL,
   AGE,
-] as const;
+  JSON,
+  JSONB,
+  OBJECT,
+];
 
 export const DATE_TYPES = {
-  DATE: "DATE",
-  TIMETZ: "TIMETZ",
-  TIME: "TIME",
-  TIMESTAMP: "TIMESTAMP",
-  TIMESTAMPTZ: "TIMESTAMPTZ",
-  INTERVAL: "INTERVAL",
+  date: "date",
+  timetz: "timetz",
+  time: "time",
+  timestamp: "timestamp",
+  current_timestamp: "current_timestamp",
+  timestamptz: "timestamptz",
+  interval: "interval",
 };
