@@ -32,7 +32,7 @@ export interface ILatLong {
   longitude: number;
 }
 
-export type ObjectT = (typeof DATA_TYPES)[number];
+export type ObjectT = (typeof DATA_TYPES)[number] | keyof typeof DATE_TYPES;
 
 export type BaseFieldSchema = {
   min?: number;
@@ -47,14 +47,26 @@ export type BaseFieldSchema = {
 export type SerialFieldSchema = BaseFieldSchema & {
   type: "serial";
   serialStartFrom?: number;
+  oneOf: never;
+};
+
+export type UserDefinedSchema = BaseFieldSchema & {
+  type: "user-defined";
+  oneOf: Array<any>;
+  default?: string;
+  serialStartFrom?: never;
 };
 
 export type NonSerialFieldSchema = BaseFieldSchema & {
   type: Exclude<ObjectT, "serial">;
   serialStartFrom?: never;
+  oneOf: never;
 };
 
-export type FieldSchema = SerialFieldSchema | NonSerialFieldSchema;
+export type FieldSchema =
+  | SerialFieldSchema
+  | NonSerialFieldSchema
+  | UserDefinedSchema;
 
 export interface RelationalSchema {
   [key: string]: {
