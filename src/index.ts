@@ -16,6 +16,7 @@ import {
   CITIES,
   COUNTRIES,
   DATE_TYPES,
+  DATA_TYPES,
 } from "./constants/index";
 import {
   IFParsePayload,
@@ -78,8 +79,9 @@ export class Random {
         return this.generateRandomString();
       case "number":
         return this.generateRandomNumber();
-      case "boolean":
+      case "boolean": {
         return this.generateRandomBoolean();
+      }
       case "age":
         return this.generateRandomAge();
       case "gender":
@@ -140,22 +142,28 @@ export class Random {
     min,
     max,
     serialStartFrom,
+    oneOf,
   }: {
     type: string;
     min?: number;
     max?: number;
     serialStartFrom?: number;
+    oneOf: Array<any>;
   }): string | number | boolean | Date | number[][] | Object {
     if (type === "serial" && this.serial === 0 && serialStartFrom) {
       this.serial = serialStartFrom - 1 > 0 ? serialStartFrom - 1 : 0;
     }
     switch (type) {
-      case "string":
-        return this.generateRandomString();
+      case "string": {
+        const randomInt = this.getRandomInt(min || 0, max || 256);
+        const randomString = this.generateRandomString(randomInt);
+        return randomString;
+      }
       case "number":
         return this.generateRandomNumber(min, max);
-      case "boolean":
+      case "boolean": {
         return this.generateRandomBoolean();
+      }
       case "age":
         return this.generateRandomAge({
           min,
@@ -176,7 +184,15 @@ export class Random {
       case "password":
         return this.generateRandomPassword();
       case "date":
-        return this.getRandomDate({});
+      case "timetz":
+      case "time":
+      case "timestamp":
+      case "timestamptz":
+      case "current_timestamp": {
+        return this.getRandomDate({
+          type,
+        });
+      }
       case "graph":
         return this.generateRandomGraph();
       case "cordinates":
@@ -207,11 +223,23 @@ export class Random {
         return this.generateRandomCity();
       case "country":
         return this.generateRandomCountry();
-      case "serial": {
-        return this.generateSerialNumber();
+      case "json":
+      case "jsonb":
+      case "object": {
+        const dataKey = this.getRandomElement({ data: DATA_TYPES }).data;
+        const obj: any = {};
+        obj[`${dataKey}`] = dataKey;
+        return this.generateRandomObject({
+          ...obj,
+        });
       }
-      default:
+      case "user-defined":
+        return this.getRandomElement({
+          one: oneOf,
+        }).one;
+      default: {
         return "";
+      }
     }
   }
 
@@ -267,18 +295,18 @@ export class Random {
       const {
         startDate = new Date(0),
         endDate = new Date(),
-        type = "TIMESTAMP",
+        type = "timestamp",
       } = props || {};
       const startTime = startDate.getTime();
       const endTime = endDate.getTime();
       switch (type) {
-        case DATE_TYPES.DATE: {
+        case DATE_TYPES.date: {
           const randomTime = startTime + Math.random() * (endTime - startTime);
           const randomDate = new Date(randomTime);
           randomDate.setHours(0, 0, 0, 0);
           return randomDate;
         }
-        case DATE_TYPES.INTERVAL: {
+        case DATE_TYPES.interval: {
           if (startDate > endDate) {
             throw new Error("startDate must be before endDate");
           }
@@ -296,7 +324,7 @@ export class Random {
             .toString()
             .padStart(2, "0")}`;
         }
-        case DATE_TYPES.TIME: {
+        case DATE_TYPES.time: {
           const hours = Math.floor(Math.random() * 24);
           const minutes = Math.floor(Math.random() * 60);
           const seconds = Math.floor(Math.random() * 60);
@@ -304,22 +332,26 @@ export class Random {
             .toString()
             .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         }
-        case DATE_TYPES.TIMESTAMP: {
+        case DATE_TYPES.timestamp: {
           const randomTime = startTime + Math.random() * (endTime - startTime);
           const randomTimestamp = new Date(randomTime);
           return randomTimestamp.toISOString();
         }
-        case DATE_TYPES.TIMESTAMPTZ: {
+        case DATE_TYPES.timestamptz: {
           const randomTime = startTime + Math.random() * (endTime - startTime);
           const randomTimestampTZ = new Date(randomTime);
           return randomTimestampTZ.toISOString();
         }
-        case DATE_TYPES.TIMETZ: {
+        case DATE_TYPES.timetz: {
           const randomTime = startTime + Math.random() * (endTime - startTime);
           const randomDate = new Date(randomTime);
           const offsetMinutes = Math.floor(Math.random() * 1440) - 720;
           randomDate.setUTCMinutes(randomDate.getUTCMinutes() + offsetMinutes);
           return randomDate.toISOString();
+        }
+        case DATE_TYPES.current_timestamp: {
+          const randomTimestamp = new Date();
+          return randomTimestamp.toISOString();
         }
         default: {
           return new Date(startTime + Math.random() * (endTime - startTime));
@@ -532,12 +564,6 @@ export class Random {
     numberOfData = 1
   ): Record<string, Array<Record<string, any>>> {
     try {
-      /* 
-     -----  for later   -----
-     1. use type for foreign key , it should be tablename followed by . and its primary key field
-     2. implement include exclude
-    
-     */
       const errors = validateRelationalSchema(schema);
       if (errors) {
         throw {
@@ -575,6 +601,7 @@ export class Random {
                         min: colObj?.min,
                         max: colObj?.max,
                         serialStartFrom: colObj?.serialStartFrom,
+                        oneOf: colObj?.oneOf || [],
                       })
                     : null;
                 if (colObj?.callback && !colObj.isPrimary) {
@@ -582,8 +609,16 @@ export class Random {
                 } else {
                   data[`${colKey}`] = res;
                 }
-                if (!res && colObj?.default) {
-                  data[`${colKey}`] = colObj.default;
+                if (
+                  !res &&
+                  (colObj?.default || colObj.default === false) &&
+                  res !== 0
+                ) {
+                  if (colObj.type === "boolean") {
+                    data[`${colKey}`] = this.generateRandomBoolean();
+                  } else {
+                    data[`${colKey}`] = colObj.default;
+                  }
                 }
               }
             }
