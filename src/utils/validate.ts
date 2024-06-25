@@ -7,7 +7,7 @@ import {
 } from "../interface";
 
 function isObjectT(value: any): value is ObjectT {
-  return DATA_TYPES.includes(value as ObjectT);
+  return DATA_TYPES.includes(value);
 }
 
 function isSerialFieldSchema(field: FieldSchema): field is SerialFieldSchema {
@@ -48,6 +48,14 @@ export function validateRelationalSchema(schema: any): Array<object> | null {
         for (const fieldKey in table) {
           if (table.hasOwnProperty(fieldKey)) {
             const field = table[fieldKey];
+            if (
+              field &&
+              ((field.type === "user-defined" && field.oneOf.length) ||
+                field.type == "json" ||
+                field.type == "jsonb")
+            ) {
+              continue;
+            }
             if (!validateFieldSchema(field)) {
               errors.push({
                 type: "field",
