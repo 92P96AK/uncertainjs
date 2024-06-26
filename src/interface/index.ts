@@ -42,31 +42,42 @@ export type BaseFieldSchema = {
   foreignKey?: string;
   required?: boolean;
   default?: any;
+  serialStartFrom?: never;
+  oneOf?: never;
 };
+
+type PrimaryKeyType = "uuid" | "integer" | "serial" | "string" | "number";
+
+interface PrimaryColumnSchema extends BaseFieldSchema {
+  isPrimary: true;
+  type: PrimaryKeyType;
+}
+
+interface NonPrimaryColumnSchema extends BaseFieldSchema {
+  isPrimary: never;
+  type: string;
+}
 
 export type SerialFieldSchema = BaseFieldSchema & {
   type: "serial";
   serialStartFrom?: number;
-  oneOf?: never;
 };
 
 export type UserDefinedSchema = BaseFieldSchema & {
   type: "user-defined";
   oneOf: Array<any>;
-  default?: string;
-  serialStartFrom?: never;
 };
 
 export type NonSerialFieldSchema = BaseFieldSchema & {
   type: Exclude<ObjectT, "serial">;
-  serialStartFrom?: never;
-  oneOf?: never;
 };
 
 export type FieldSchema =
   | SerialFieldSchema
   | NonSerialFieldSchema
-  | UserDefinedSchema;
+  | UserDefinedSchema
+  | PrimaryColumnSchema
+  | NonPrimaryColumnSchema;
 
 export interface RelationalSchema {
   [key: string]: {
