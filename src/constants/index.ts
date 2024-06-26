@@ -62,3 +62,5 @@ export {
   DATA_TYPES,
   DATE_TYPES,
 } from "./types";
+
+export { MATCH_F_KEYS } from "./regex";
