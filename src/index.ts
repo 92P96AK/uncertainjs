@@ -17,8 +17,10 @@ import {
   COUNTRIES,
   DATE_TYPES,
   DATA_TYPES,
+  MATCH_F_KEYS,
 } from "./constants/index";
 import {
+  FieldSchema,
   IFParsePayload,
   IFPayload,
   IFullNamePayload,
@@ -143,13 +145,7 @@ export class Random {
     max,
     serialStartFrom,
     oneOf,
-  }: {
-    type: string;
-    min?: number;
-    max?: number;
-    serialStartFrom?: number;
-    oneOf: Array<any>;
-  }): string | number | boolean | Date | number[][] | Object {
+  }: FieldSchema): string | number | boolean | Date | number[][] | Object {
     if (type === "serial" && this.serial === 0 && serialStartFrom) {
       this.serial = serialStartFrom - 1 > 0 ? serialStartFrom - 1 : 0;
     }
@@ -235,8 +231,10 @@ export class Random {
       }
       case "user-defined":
         return this.getRandomElement({
-          one: oneOf,
+          one: oneOf || [],
         }).one;
+      case "serial":
+        return this.generateSerialNumber();
       default: {
         return "";
       }
@@ -573,6 +571,7 @@ export class Random {
       }
       const result: Record<string, Array<Record<string, any>>> = {};
       const relationObject: Record<string, any> = {};
+      // const OrderedSchema: RelationalSchema = GetOrderedSchema(schema);
       for (const table in schema) {
         if (schema.hasOwnProperty(table)) {
           result[`${table}`] = Array.from({ length: numberOfData }).map(() => {
@@ -586,39 +585,34 @@ export class Random {
                 }
                 if (colObj?.foreignKey) {
                   const [relationalTable, relationalKey, ..._] =
-                    colObj.foreignKey.split(".");
+                    colObj.foreignKey.split(MATCH_F_KEYS);
                   const { relData } = this.getRandomElement({
                     relData: result[`${relationalTable}`] || [],
                   });
                   data[`${colKey}`] = relData[`${relationalKey}`];
                   continue;
                 }
-                const res =
+                const shouldGenerateValue =
                   !!(colObj.required === undefined || colObj.required) ||
-                  colObj.isPrimary
-                    ? this.getRandomvalueWithProps({
-                        type: colObj.type,
-                        min: colObj?.min,
-                        max: colObj?.max,
-                        serialStartFrom: colObj?.serialStartFrom,
-                        oneOf: colObj?.oneOf || [],
-                      })
-                    : null;
+                  colObj.isPrimary;
+
+                const generatedValue = shouldGenerateValue
+                  ? this.getRandomvalueWithProps(colObj)
+                  : null;
                 if (colObj?.callback && !colObj.isPrimary) {
-                  data[`${colKey}`] = colObj.callback(res);
+                  data[`${colKey}`] = colObj.callback(generatedValue);
                 } else {
-                  data[`${colKey}`] = res;
+                  data[`${colKey}`] = generatedValue;
                 }
                 if (
-                  !res &&
-                  (colObj?.default || colObj.default === false) &&
-                  res !== 0
+                  (generatedValue == null || generatedValue == "") &&
+                  (colObj.default || colObj.default === false) &&
+                  generatedValue !== 0
                 ) {
-                  if (colObj.type === "boolean") {
-                    data[`${colKey}`] = this.generateRandomBoolean();
-                  } else {
-                    data[`${colKey}`] = colObj.default;
-                  }
+                  data[colKey] =
+                    colObj.type === "boolean"
+                      ? this.generateRandomBoolean()
+                      : colObj.default;
                 }
               }
             }
