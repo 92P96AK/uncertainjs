@@ -18,6 +18,8 @@ import {
   DATE_TYPES,
   DATA_TYPES,
   MATCH_F_KEYS,
+  LONG_DESCRIPTION,
+  SHORT_DESCRIPTION,
 } from "./constants/index";
 import {
   FieldSchema,
@@ -235,6 +237,19 @@ export class Random {
         }).one;
       case "serial":
         return this.generateSerialNumber();
+      case "text": {
+        const { el } = this.getRandomElement({
+          el: [SHORT_DESCRIPTION, LONG_DESCRIPTION],
+        });
+        switch (el) {
+          case "shortDescription":
+            return this.generateRandomShortDescrption();
+          case "longDescription":
+            return this.generateRandomLongDescription();
+          default: {
+          }
+        }
+      }
       default: {
         return "";
       }

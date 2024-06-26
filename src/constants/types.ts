@@ -34,6 +34,7 @@ export const INTERVAL = "interval";
 export const JSON = "json";
 export const JSONB = "jsonb";
 export const OBJECT = "object";
+export const TEXT = "text";
 
 export const DATA_TYPES = [
   TIMETZ,
@@ -71,6 +72,7 @@ export const DATA_TYPES = [
   JSON,
   JSONB,
   OBJECT,
+  TEXT,
 ];
 
 export const DATE_TYPES = {
