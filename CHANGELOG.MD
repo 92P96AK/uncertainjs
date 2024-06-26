@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.1.02 (2024-06-26)
+
+### Added
+- Relation on schema
+- Text type data generator
+- Bug fixes
+
 ## Version 0.0.20 (2024-06-25)
 
 ### Added
